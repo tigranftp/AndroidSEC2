@@ -101,6 +101,7 @@ fun ItemDetailsScreen(
         ItemDetailsBody(
             itemDetailsUiState = uiState.value,
             onSellItem = { viewModel.reduceQuantityByOne() },
+            onShareItem = { viewModel.run { share() } },
             onDelete = {
                 // Note: If the user rotates the screen very fast, the operation may get cancelled
                 // and the item may not be deleted from the Database. This is because when config
@@ -123,6 +124,7 @@ private fun ItemDetailsBody(
     itemDetailsUiState: ItemDetailsUiState,
     onSellItem: () -> Unit,
     onDelete: () -> Unit,
+    onShareItem: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -140,6 +142,14 @@ private fun ItemDetailsBody(
             enabled = !itemDetailsUiState.outOfStock
         ) {
             Text(stringResource(R.string.sell))
+        }
+        Button(
+            onClick = onShareItem,
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.small,
+            enabled = true
+        ) {
+            Text("Share")
         }
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
@@ -280,6 +290,6 @@ fun ItemDetailsScreenPreview() {
     InventoryTheme {
         ItemDetailsBody(ItemDetailsUiState(
             outOfStock = true, itemDetails = ItemDetails(1, "Pen", "$100", "10", "IKEA", "ikea@gmail.com",    "+79885103293")
-        ), onSellItem = {}, onDelete = {})
+        ), onSellItem = {}, onShareItem = {}, onDelete = {})
     }
 }

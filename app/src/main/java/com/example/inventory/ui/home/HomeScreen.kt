@@ -176,6 +176,18 @@ private fun InventoryItem(
                 text = stringResource(R.string.in_stock, item.quantity),
                 style = MaterialTheme.typography.titleMedium
             )
+            Text(
+                text = item.providerName,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = item.providerPhoneNumber,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = item.providerEmail,
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }

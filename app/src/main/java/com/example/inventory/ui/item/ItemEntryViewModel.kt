@@ -65,7 +65,9 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
  */
 data class ItemUiState(
     val itemDetails: ItemDetails = ItemDetails(),
-    val isEntryValid: Boolean = false
+    val isEntryValid: Boolean = false,
+    val isPhoneValid: Boolean = true,
+    val isEmailValid: Boolean = true,
 )
 
 data class ItemDetails(
@@ -83,15 +85,17 @@ data class ItemDetails(
  * not a valid [Double], then the price will be set to 0.0. Similarly if the value of
  * [ItemUiState] is not a valid [Int], then the quantity will be set to 0
  */
-fun ItemDetails.toItem(): Item = Item(
-    id = id,
-    name = name,
-    price = price.toDoubleOrNull() ?: 0.0,
-    quantity = quantity.toIntOrNull() ?: 0,
-    providerEmail = providerEmail,
-    providerPhoneNumber = providerPhoneNumber,
-    providerName = providerName,
-)
+fun ItemDetails.toItem(): Item {
+    return Item(
+        id = id,
+        name = name,
+        price = price.toDoubleOrNull() ?: 0.0,
+        quantity = quantity.toIntOrNull() ?: 0,
+        providerEmail = providerEmail,
+        providerPhoneNumber = providerPhoneNumber,
+        providerName = providerName,
+    )
+}
 
 fun Item.formatedPrice(): String {
     return NumberFormat.getCurrencyInstance().format(price)

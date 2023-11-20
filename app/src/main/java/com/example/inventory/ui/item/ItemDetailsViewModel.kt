@@ -16,9 +16,11 @@
 
 package com.example.inventory.ui.item
 
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.inventory.MAIN
 import com.example.inventory.data.ItemsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -70,6 +72,55 @@ class ItemDetailsViewModel(
     suspend fun deleteItem() {
         itemsRepository.deleteItem(uiState.value.itemDetails.toItem())
     }
+
+
+
+    fun share() {
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        sharingIntent.type = "text/plain"
+
+        var sharingText = """
+            Item Details:
+            Name: ${uiState.value.itemDetails.name}
+            Price: ${uiState.value.itemDetails.price} $
+            Quantity: ${uiState.value.itemDetails.quantity}
+        """.trimIndent()
+            if (uiState.value.itemDetails.providerName.isNotBlank() ||
+            uiState.value.itemDetails.providerPhoneNumber.isNotBlank() ||
+            uiState.value.itemDetails.providerEmail.isNotBlank()) {
+
+                sharingText += "\n"
+            sharingText += """
+                
+                 Provider Info:
+                """.trimIndent()
+
+        }
+        if (uiState.value.itemDetails.providerName.isNotBlank()){
+
+            sharingText += "\n"
+            sharingText += """
+                Name: ${uiState.value.itemDetails.providerName}
+                """.trimIndent()
+        }
+        if (uiState.value.itemDetails.providerPhoneNumber.isNotBlank()){
+            sharingText += "\n"
+            sharingText += """
+                Phone Number: ${uiState.value.itemDetails.providerPhoneNumber}
+                """.trimIndent()
+        }
+        if (uiState.value.itemDetails.providerEmail.isNotBlank()){
+            sharingText += "\n"
+            sharingText += """
+                Email: ${uiState.value.itemDetails.providerEmail}
+                """.trimIndent()
+        }
+
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, sharingText)
+
+        MAIN.startActivity(Intent.createChooser(sharingIntent, null))
+    }
+
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L

@@ -67,12 +67,34 @@ class ItemEditViewModel(
      */
     fun updateUiState(itemDetails: ItemDetails) {
         itemUiState =
-            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
+            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails),
+                isPhoneValid = validatePhone(itemDetails),
+                isEmailValid = validateEmail(itemDetails))
     }
 
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
+            name.isNotBlank()
+                    && price.isNotBlank()
+                    && quantity.isNotBlank()
+                    && validatePhone(uiState)
+                    && validateEmail(uiState)
+        }
+    }
+
+    private val validEmailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    private val validPhoneNumberRegex = Regex("^8\\d{10}$")
+
+
+    private fun validatePhone(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+        return with(uiState) {
+            !(providerPhoneNumber.isNotBlank() && !validPhoneNumberRegex.matches(providerPhoneNumber))
+        }
+    }
+
+    private fun validateEmail(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+        return with(uiState) {
+            !(providerEmail.isNotBlank() && !validEmailRegex.matches(providerEmail))
         }
     }
 }
