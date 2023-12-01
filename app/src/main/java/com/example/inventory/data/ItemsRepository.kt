@@ -16,6 +16,7 @@
 
 package com.example.inventory.data
 
+import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -40,6 +41,7 @@ interface ItemsRepository {
     /**
      * Delete item from the data source
      */
+    suspend fun isExists(name: String): Boolean
     suspend fun deleteItem(item: Item)
 
     /**

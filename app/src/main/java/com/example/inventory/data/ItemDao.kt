@@ -36,6 +36,9 @@ interface ItemDao {
     @Query("SELECT * from items WHERE id = :id")
     fun getItem(id: Int): Flow<Item>
 
+
+    @Query("SELECT EXISTS(SELECT * FROM items WHERE name = :name)")
+    suspend fun isExists(name: String): Boolean
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.
     @Insert(onConflict = OnConflictStrategy.IGNORE)

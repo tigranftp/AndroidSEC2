@@ -17,6 +17,7 @@
 package com.example.inventory.ui.item
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -117,8 +118,25 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
             val gson = Gson()
             val item = gson.fromJson(jsonItem, Item::class.java)
             item.sourceType = SourceType.File
+            var curName = item.name
+            var i = 1
+            while (itemsRepository.isExists(curName)) {
+                curName = "${item.name} ($i)"
+                i++
+            }
 
-            itemsRepository.insertItem(item)
+            val finalItem = Item(
+                id = 0,
+                name = curName,
+                price = item.price,
+                quantity = item.quantity,
+                providerEmail = item.providerEmail,
+                providerPhoneNumber = item.providerPhoneNumber,
+                providerName = item.providerName,
+                sourceType = item.sourceType,
+
+                )
+            itemsRepository.insertItem(finalItem)
 
             file.delete()
         }
