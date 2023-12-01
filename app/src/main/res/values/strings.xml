@@ -38,4 +38,12 @@
     <string name="sell">Sell</string>
     <string name="yes">Yes</string>
     <string name="required_fields">*required fields</string>
+    <string name="settings_title">Settings</string>
+    <string name="provider_name_default">Default provider name</string>
+    <string name="provider_email_default">Default provider E-mail</string>
+    <string name="provider_phone_number_default">Default provider phone</string>
+    <string name="enable_default_fields">Enable default fields</string>
+    <string name="hide_sensitive_data">Hide sensitive data</string>
+    <string name="disable_sharing">Disable sharing</string>
+    <string name="save_title">Save</string>
 </resources>

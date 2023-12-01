@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
+import com.example.inventory.data.Settings
 import java.text.NumberFormat
 
 /**
@@ -41,7 +42,9 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
      */
     fun updateUiState(itemDetails: ItemDetails) {
         itemUiState =
-            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
+            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails),
+                isPhoneValid = validatePhone(itemDetails),
+                isEmailValid = validateEmail(itemDetails))
     }
 
     /**
@@ -56,6 +59,24 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
             name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
+                    && validatePhone(uiState)
+                    && validateEmail(uiState)
+        }
+    }
+
+    private val validEmailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    private val validPhoneNumberRegex = Regex("^8\\d{10}$")
+
+
+    private fun validatePhone(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+        return with(uiState) {
+            !(providerPhoneNumber.isNotBlank() && !validPhoneNumberRegex.matches(providerPhoneNumber))
+        }
+    }
+
+    private fun validateEmail(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+        return with(uiState) {
+            !(providerEmail.isNotBlank() && !validEmailRegex.matches(providerEmail))
         }
     }
 }
@@ -64,7 +85,18 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
  * Represents Ui State for an Item.
  */
 data class ItemUiState(
-    val itemDetails: ItemDetails = ItemDetails(),
+    val itemDetails: ItemDetails = if (!Settings.enableDefaultFields)
+        ItemDetails()
+    else ItemDetails(
+        id = 0,
+        name = "",
+        price = "",
+        quantity = "",
+        providerName = Settings.defaultProviderName,
+        providerPhoneNumber = Settings.defaultProviderPhoneNumber,
+        providerEmail = Settings.defaultProviderEmail,
+        //sourceType = SourceType.Manual,
+    ),
     val isEntryValid: Boolean = false,
     val isPhoneValid: Boolean = true,
     val isEmailValid: Boolean = true,

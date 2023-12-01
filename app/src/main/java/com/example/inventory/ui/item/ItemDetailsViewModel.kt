@@ -16,11 +16,16 @@
 
 package com.example.inventory.ui.item
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.security.crypto.EncryptedFile
 import com.example.inventory.MAIN
+import com.example.inventory.MASTER_KEY
 import com.example.inventory.data.ItemsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +33,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.google.gson.Gson
+import java.io.File
 
 /**
  * ViewModel to retrieve, update and delete an item from the [ItemsRepository]'s data source.
@@ -73,6 +80,31 @@ class ItemDetailsViewModel(
         itemsRepository.deleteItem(uiState.value.itemDetails.toItem())
     }
 
+    @SuppressLint("Recycle")
+    fun saveToFile(uri: Uri) {
+        val contentResolver = MAIN.applicationContext.contentResolver
+        val inputStream = contentResolver.openInputStream(uri)
+
+        if (inputStream != null) {
+            val file = File(MAIN.applicationContext.cacheDir, "temp.json")
+
+            val encryptedFile = EncryptedFile.Builder(
+                MAIN.applicationContext,
+                file,
+                MASTER_KEY,
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+            ).build()
+            file.delete()
+
+            val jsonItem = Gson().toJson(uiState.value.itemDetails)
+
+            encryptedFile.openFileOutput().use { outputStream ->
+                outputStream.write(jsonItem.toByteArray())
+                outputStream.close()
+                Log.w("AAA", jsonItem )
+            }
+        }
+    }
 
 
     fun share() {
