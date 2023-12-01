@@ -16,14 +16,21 @@
 
 package com.example.inventory.ui.item
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.security.crypto.EncryptedFile
+import com.example.inventory.MAIN
+import com.example.inventory.MASTER_KEY
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
 import com.example.inventory.data.Settings
 import com.example.inventory.data.SourceType
+import com.google.gson.Gson
+import java.io.File
+import java.io.FileInputStream
 import java.text.NumberFormat
 
 /**
@@ -78,6 +85,42 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
     private fun validateEmail(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
             !(providerEmail.isNotBlank() && !validEmailRegex.matches(providerEmail))
+        }
+    }
+
+    suspend fun loadFromFile(uri: Uri) {
+        val contentResolver = MAIN.applicationContext.contentResolver
+
+        val file = File(MAIN.applicationContext.cacheDir, "temp.json")
+        if (file.exists())
+            file.delete()
+
+        val encryptedFile = EncryptedFile.Builder(
+            MAIN.applicationContext,
+            file,
+            MASTER_KEY,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        file.outputStream().use { outputStream ->
+            contentResolver.openFileDescriptor(uri, "r")?.use { descriptor ->
+                FileInputStream(descriptor.fileDescriptor).use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                    inputStream.close()
+                }
+                outputStream.close()
+            }
+        }
+
+        encryptedFile.openFileInput().use { inputStream ->
+            val jsonItem = String(inputStream.readBytes())
+            val gson = Gson()
+            val item = gson.fromJson(jsonItem, Item::class.java)
+            item.sourceType = SourceType.File
+
+            itemsRepository.insertItem(item)
+
+            file.delete()
         }
     }
 }
