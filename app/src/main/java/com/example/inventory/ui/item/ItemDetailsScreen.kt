@@ -176,7 +176,7 @@ private fun ItemDetailsBody(
             onClick = onShareItem,
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
-            enabled = true
+            enabled = !Settings.disableSharing
         ) {
             Text("Share")
         }
