@@ -46,4 +46,5 @@
     <string name="hide_sensitive_data">Hide sensitive data</string>
     <string name="disable_sharing">Disable sharing</string>
     <string name="save_title">Save</string>
+    <string name="source_type">Source Type</string>
 </resources>

@@ -178,7 +178,6 @@ fun ItemInputForm(
         OutlinedTextField(
             value = itemDetails.providerName,
             onValueChange = { onValueChange(itemDetails.copy(providerName = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text(stringResource(R.string.provider_name)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -209,7 +208,6 @@ fun ItemInputForm(
         OutlinedTextField(
             value = itemDetails.providerEmail,
             onValueChange = { onValueChange(itemDetails.copy(providerEmail = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text(stringResource(R.string.provider_email)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,

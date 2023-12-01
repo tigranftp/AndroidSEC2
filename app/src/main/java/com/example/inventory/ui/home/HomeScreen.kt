@@ -57,6 +57,7 @@ import com.example.inventory.InventoryTopAppBar
 import com.example.inventory.R
 import com.example.inventory.data.Item
 import com.example.inventory.data.Settings
+import com.example.inventory.data.SourceType
 import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.item.formatedPrice
 import com.example.inventory.ui.navigation.NavigationDestination
@@ -211,7 +212,7 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     InventoryTheme {
         HomeBody(listOf(
-            Item(1, "Game", 100.0, 20, "IKEA", "ikea@gmail.com",    "+79885103293"), Item(2, "Pen", 200.0, 30, "IKEA", "ikea@gmail.com",    "+79885103293"), Item(3, "TV", 300.0, 50, "IKEA", "ikea@gmail.com",    "+79885103293")
+            Item(1, "Game", 100.0, 20, "IKEA", "ikea@gmail.com",    "89885103293", sourceType = SourceType.Manual), Item(2, "Pen", 200.0, 30, "IKEA", "ikea@gmail.com",    "89885103293", sourceType = SourceType.Manual), Item(3, "TV", 300.0, 50, "IKEA", "ikea@gmail.com",    "89885103293", sourceType = SourceType.Manual)
         ), onItemClick = {})
     }
 }
@@ -229,7 +230,7 @@ fun HomeBodyEmptyListPreview() {
 fun InventoryItemPreview() {
     InventoryTheme {
         InventoryItem(
-            Item(1, "Game", 100.0, 20, "IKEA", "ikea@gmail.com",    "+79885103293"),
+            Item(1, "Game", 100.0, 20, "IKEA", "ikea@gmail.com",    "+79885103293", sourceType = SourceType.Manual),
         )
     }
 }

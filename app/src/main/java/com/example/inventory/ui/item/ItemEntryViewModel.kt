@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemsRepository
 import com.example.inventory.data.Settings
+import com.example.inventory.data.SourceType
 import java.text.NumberFormat
 
 /**
@@ -95,7 +96,7 @@ data class ItemUiState(
         providerName = Settings.defaultProviderName,
         providerPhoneNumber = Settings.defaultProviderPhoneNumber,
         providerEmail = Settings.defaultProviderEmail,
-        //sourceType = SourceType.Manual,
+        sourceType = SourceType.Manual,
     ),
     val isEntryValid: Boolean = false,
     val isPhoneValid: Boolean = true,
@@ -109,8 +110,9 @@ data class ItemDetails(
     val quantity: String = "",
     val providerName: String = "",
     val providerEmail: String = "",
-    val providerPhoneNumber: String = ""
-)
+    val providerPhoneNumber: String = "",
+    val sourceType: SourceType = SourceType.Manual
+    )
 
 /**
  * Extension function to convert [ItemUiState] to [Item]. If the value of [ItemDetails.price] is
@@ -126,6 +128,8 @@ fun ItemDetails.toItem(): Item {
         providerEmail = providerEmail,
         providerPhoneNumber = providerPhoneNumber,
         providerName = providerName,
+        sourceType = sourceType,
+
     )
 }
 
@@ -152,4 +156,5 @@ fun Item.toItemDetails(): ItemDetails = ItemDetails(
     providerName = providerName,
     providerEmail = providerEmail,
     providerPhoneNumber = providerPhoneNumber,
+    sourceType = sourceType,
 )

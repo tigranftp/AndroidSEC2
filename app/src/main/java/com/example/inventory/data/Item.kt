@@ -31,5 +31,10 @@ data class Item(
     val quantity: Int,
     val providerName: String,
     val providerEmail: String,
-    val providerPhoneNumber: String
+    val providerPhoneNumber: String,
+    var sourceType: SourceType
+
 )
+enum class SourceType {
+    Manual, File
+}
